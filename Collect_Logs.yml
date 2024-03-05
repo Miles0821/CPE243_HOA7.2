@@ -1,0 +1,16 @@
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Secure Lg Files
+    find:
+      paths: val/log/
+      patterns: '*.log'
+    registers: log_files
+
+  - name: Collecting Log Files
+    fetch:
+      src: "{[ item.path ]}"
+      dest: tmp/logs/
+      flat: yes
+    with_items: "{{ log_files.files }}"
